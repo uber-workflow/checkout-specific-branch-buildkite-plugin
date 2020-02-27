@@ -1,0 +1,7 @@
+name: Checkout specific branch
+description: Overrides the default checkout script to instead checkout specific branch
+author: https://github.com/uber-workflow
+configuration:
+  properties:
+    branch:
+      type: string

@@ -12,4 +12,4 @@ steps:
         branch: "next"
 ```
 
-If `branch` is not provided, the default of `master` is used.
+If `branch` is not provided, the default branch of the pipeline is used.

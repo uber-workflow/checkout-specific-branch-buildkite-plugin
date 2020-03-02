@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Logic referenced from:
+# https://github.com/buildkite/agent/blob/30f8cc6/bootstrap/bootstrap.go#L1080-L1272
+
 GIT_BRANCH=${BUILDKITE_PLUGIN_CHECKOUT_SPECIFIC_BRANCH_BRANCH:-$BUILDKITE_PIPELINE_DEFAULT_BRANCH}
 
 echo "Checking out branch: $GIT_BRANCH"
@@ -20,3 +23,12 @@ git fetch -v --prune origin "$GIT_BRANCH"
 git checkout -f FETCH_HEAD
 
 git clean -ffxdq
+
+if [ -n "$BUILDKITE_AGENT_ACCESS_TOKEN" ]; then
+  echo "Checking to see if Git data needs to be sent to Buildkite"
+
+  if ! buildkite-agent meta-data exists buildkite:git:commit; then
+    COMMIT_DATA=$(git --no-pager show HEAD -s --format=fuller --no-color)
+    buildkite-agent meta-data set buildkite:git:commit "$COMMIT_DATA"
+  fi
+fi
